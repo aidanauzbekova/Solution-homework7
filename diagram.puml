@@ -1,0 +1,33 @@
+@startuml
+interface TowerMediator {
+    +broadcast(msg: String, sender: Aircraft)
+    +requestRunway(a: Aircraft): boolean
+}
+
+abstract class Aircraft {
+    -id: String
+    +receive(msg: String)
+    +send(msg: String, mediator: TowerMediator)
+    +getId(): String
+}
+
+class PassengerPlane extends Aircraft
+class CargoPlane extends Aircraft
+class Helicopter extends Aircraft
+
+class ControlTower implements TowerMediator {
+    -landingQueue: Queue
+    -takeoffQueue: Queue
+    -runwayAvailable: boolean
+    -emergencyActive: boolean
+    +registerAircraft(a: Aircraft)
+    +releaseRunway()
+    +resolveEmergency()
+}
+
+TowerMediator <|-- ControlTower
+Aircraft <|-- PassengerPlane
+Aircraft <|-- CargoPlane
+Aircraft <|-- Helicopter
+Aircraft --> TowerMediator
+@enduml
